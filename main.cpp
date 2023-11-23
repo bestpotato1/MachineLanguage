@@ -52,10 +52,10 @@ int main(){
     
     std::bitset<32> binaryRepresentation2(machineCode);
     std::cout << "\n" << binaryRepresentation2 << "\n";
-/*
+
     infile >> instruction2 >> operand12 >> operand13 >> operand14;
 
-    machineCode = assembler::assemble(instruction2, operand12, operand13, operand14);
+    machineCode = assembler::assembleMem(instruction2, operand12, operand13, operand14);
 
     std::cout << "\n\nSTR operation\n";
     std::cout << std::hex << std::uppercase << machineCode << "\n";
@@ -65,7 +65,7 @@ int main(){
 
     infile >> instruction3 >> operand21 >> operand22 >> operand23;
 
-    machineCode = assembler::assemble(instruction3, operand21, operand22, operand23);
+    machineCode = assembler::assembleDP(instruction3, operand21, operand22, operand23);
 
     std::cout << "\n\nASR operation\n";
     std::cout << std::hex << std::uppercase << machineCode << "\n";
@@ -75,5 +75,5 @@ int main(){
 
     infile.close();
 
-    return 0; */
+    return 0; 
 }
