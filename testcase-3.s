@@ -1,0 +1,10 @@
+MOV R2, #0
+MOV R3, R1
+L1
+	CMP R1, R0
+	BHI DONE
+	ADD R2, R2, #1
+	ADD R1, R1, R3
+	B L1
+DONE
+	MOV R0, R2	
