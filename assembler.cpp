@@ -114,7 +114,6 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
 
     // Immediate bit conditions
     if(operand3.substr(0,1) == "#"){
-        std::cout << "In the immediate check clause.\n";
         machinecode |= (1 << 25); // I = 1
         machinecode |= (std::stoi(operand3.substr(1)));
     } else{ // Register
@@ -180,6 +179,14 @@ uint32_t assembler::assembleMem(const std::string& instruction, const std::strin
     // Destination register
     reg = registers.find(operand1);
     machinecode |= (reg->second << 12);
+
+    return machinecode;
+
+}
+
+uint32_t assembler::assembleBranch(const std::string& instruction){
+
+    uint32_t machinecode = 0;
 
     return machinecode;
 
