@@ -20,23 +20,12 @@ int main(){
     std::string instruction2, operand12, operand13, operand14;
     std::string instruction3, operand21, operand22, operand23;
 
-    /* while(infile >> instruction >> operand1 >> operand2 >> operand3){
-
-        std::cout << instruction << " " << operand1 << " " << operand2 << " " << operand3;
-
-        std::cout << "\n";
-        
-        // uint32_t machineCode = assembler::assemble(instruction, operand1, operand2, operand3);
-
-    } */
-
-
-    // ADD instructions on testcase-1
+    // CMP instructions on testcase-1 test
     infile >> instruction >> operand1 >> operand2 >> operand3;
 
     uint32_t machinecode = assembler::assembleDP(instruction, operand1, operand2, operand3);
     
-    std::cout << "ADD operation: \n";
+    std::cout << "MOV operation: \n";
     std::cout << std::hex << std::uppercase << machinecode << "\n";
     
     std::bitset<32> binaryRepresentation(machinecode);

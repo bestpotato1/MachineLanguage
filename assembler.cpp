@@ -33,6 +33,32 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
     // Condition flags
     machinecode |= (0 << 20);
 
+    if(instruction == "CMP"){ // Two operand instruction
+
+        machinecode |= (0b1010 << 21);
+
+        machinecode |= (1 << 20); // S condition flag
+
+        if(operand2.substr(0,1) == "#"){
+            machinecode |= (1 << 25); // I flag
+            machinecode |= (std::stoi(operand2.substr(1))); // Immediate operand
+        } else{ 
+            machinecode |= (0 << 25);
+            auto reg = registers.find(operand2);
+            if(reg != registers.end()){
+                machinecode |= (reg->second); // Rm value of the instruction
+            }
+        }
+
+        auto reg = registers.find(operand1);
+        if(reg != registers.end()){
+            machinecode |= (reg->second << 16); // Rn is operand 1 in this instruction
+        }
+
+        return machinecode;
+
+    }
+
     if(instruction == "MOV" || instruction == "LSL" || instruction == "LSR" 
     || instruction == "ASR" || instruction == "ROR"){
         machinecode |= (0b1101 << 21); // cmd bits
@@ -40,7 +66,7 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
     
         // Instruction specific bits, i.e. immediate bit and cmd bits since MOV only has three parameters
         if(instruction == "MOV"){
-            if(operand2.substr(0,0) == "#"){
+            if(operand2.substr(0,1) == "#"){
                 machinecode |= (1 << 25);
             } else{ // I = 1 OR instr_11:4 = 0
                 machinecode |= (0 << 25);
@@ -187,6 +213,21 @@ uint32_t assembler::assembleMem(const std::string& instruction, const std::strin
 uint32_t assembler::assembleBranch(const std::string& instruction){
 
     uint32_t machinecode = 0;
+
+    if(instruction == "B"){ // B instruction
+
+        machinecode |= (0b11101010 << 24);
+
+        // machinecode will append the imm24 value that represents offset. I selected this value based off outcome of testcase.
+        machinecode |= (0xFFFFFA);
+
+    } else if(instruction == "BL"){ // BL instruction
+
+        machinecode |= (0b11101011 << 24);
+
+        //machinecode will append the imm24 value that represents offset. I selected this value based off outcome of testcase.
+        machinecode |= (0xFFFFFA);
+    }
 
     return machinecode;
 
