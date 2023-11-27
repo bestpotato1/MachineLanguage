@@ -68,6 +68,9 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
         if(instruction == "MOV"){
             if(operand2.substr(0,1) == "#"){
                 machinecode |= (1 << 25);
+                if(operand2.substr(1,2) == "0x"){ // If hexadecimal value
+                    machinecode |= (std::stoi(operand2.substr(3), nullptr, 16));
+                } else machinecode |= (std::stoi(operand2.substr(1)));
             } else{ // I = 1 OR instr_11:4 = 0
                 machinecode |= (0 << 25);
                 machinecode |= (0b00000000 << 4);
@@ -83,14 +86,15 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
             auto reg = registers.find(operand1);
             machinecode |= (reg->second << 12); // Register destination
 
-            // If I=0, here are register operations
             if(operand3.substr(0,1) == "#"){ 
                 
                 reg = registers.find(operand2);
-                machinecode |= (reg->second);
+                machinecode |= (reg->second); // Rm value is appended to the end
 
-                machinecode |= (std::stoi(operand3.substr(1)) << 7);
-                
+                if(operand3.substr(1,2) == "0x"){ // If hexadecimal value
+                machinecode |= (std::stoi(operand3.substr(3), nullptr, 16) << 7);
+                } else machinecode |= (std::stoi(operand3.substr(1)) << 7);
+
                 // Sh bits for register immediates
                 if(instruction == "LSL"){
                     machinecode |= (0b000 << 4);
@@ -141,8 +145,10 @@ uint32_t assembler::assembleDP(const std::string& instruction, const std::string
     // Immediate bit conditions
     if(operand3.substr(0,1) == "#"){
         machinecode |= (1 << 25); // I = 1
-        machinecode |= (std::stoi(operand3.substr(1)));
-    } else{ // Register
+        if(operand3.substr(1,2) == "0x"){ // If hexadecimal value
+            machinecode |= (std::stoi(operand3.substr(3), nullptr, 16)); // bitwise OR the hex value
+        } else machinecode |= (std::stoi(operand3.substr(1)));
+   } else{ // Register
         machinecode |= (0 << 25); // I = 0
         
         machinecode |= (0b00000000 << 4); // 8 bits covering shamt5, sh, and fixed 0 bit for standard data processing instructions
